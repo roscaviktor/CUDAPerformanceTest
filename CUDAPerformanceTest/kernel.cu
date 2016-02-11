@@ -2,7 +2,7 @@
  Author: Victor Rosca
  Date: 2016-02-10
 
-                     Testing Performance.
+                     CUDA. Testing Performance.
  
  This application generate an image using CUDA. 
  CUDA is a parallel computing platform and application programming interface (API) model created by NVIDIA.
@@ -147,7 +147,7 @@ char *time_stamp(){
 // This function is running in GPU.
 __global__ void runKernel(char *blue, char *green, char *red, long blockSize, long width, long height)
 {
-	int i = blockIdx.x * blockDim.x;
+	int i = blockIdx.x * blockDim.x + threadIdx.x;
 #ifdef IMAGE_TYPE_1
 	blue[i] = (char)((255));
 	green[i] = (char)((255));
