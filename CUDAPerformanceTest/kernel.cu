@@ -23,14 +23,17 @@
 #include <string.h>
 
 ////////////////////////////////////////////////////////////////////
-#define IMAGE_TYPE_1
+//#define IMAGE_TYPE_1
+//#define IMAGE_TYPE_2
+#define IMAGE_TYPE_3
+//#define IMAGE_TYPE_4
 
-#define IMAGE_WIDTH		4000
-#define IMAGE_HEIGHT	4000
+#define IMAGE_WIDTH		5000
+#define IMAGE_HEIGHT	5000
 #define IMAGE_LEN		IMAGE_WIDTH * IMAGE_HEIGHT
 
 // If is defined TESTING_PERFORMANCE then the program will generate a HTML file that will contain the result of testing. 
-//#define TESTING_PERFORMANCE
+#define TESTING_PERFORMANCE
 
 #ifdef TESTING_PERFORMANCE
 #define BLOCK_STEP 10
@@ -152,10 +155,45 @@ __global__ void runKernel(char *blue, char *green, char *red, long blockSize, lo
 	blue[i] = (char)((255));
 	green[i] = (char)((255));
 	red[i] = (char)(((width*height) / i) % 256);
-#else
+#endif
+#ifdef IMAGE_TYPE_2
 	blue[i] = (char)(width * height / i * 256) % 256;
 	green[i] = (char)(width * height / i * 128) % 256;
 	red[i] = (char)(width * height / i * 64) % 256;
+#endif
+#ifdef IMAGE_TYPE_3
+	blue[i] = (char)((i * 256) / (width * height));
+	green[i] = 64;
+	red[i] = 64;
+#endif
+#ifdef IMAGE_TYPE_4
+	long y = i / width;
+	switch (threadIdx.x % 3){
+	case 0:
+		blue[i] = 255;
+		green[i] = 0;
+		red[i] = 0;
+		//blue[i] = (char)(blockIdx.x * 256 / blockDim.x);
+		//green[i] = (char)(blockIdx.x * 64 / blockDim.x);
+		//red[i] = (char)(blockIdx.x * 64 / blockDim.x);
+		break;
+	case 1:
+		blue[i] = 0;
+		green[i] = 255;
+		red[i] = 0;
+		//blue[i] = (char)(blockIdx.x * 64 / blockDim.x);
+		//green[i] = (char)(blockIdx.x * 256 / blockDim.x);
+		//red[i] = (char)(blockIdx.x * 64 / blockDim.x);
+		break;
+	case 2:
+		blue[i] = 0;
+		green[i] = 0;
+		red[i] = 255;
+		//blue[i] = (char)(blockIdx.x * 64 / blockDim.x);
+		//green[i] = (char)(blockIdx.x * 64 / blockDim.x);
+		//red[i] = (char)(blockIdx.x * 256 / blockDim.x);
+		break;
+	}
 #endif
 }
 
